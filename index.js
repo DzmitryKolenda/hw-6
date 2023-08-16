@@ -83,7 +83,7 @@ fetch('https://dummyjson.com/products')
       };
     };
 
-    cardBody.forEach(body => body.querySelector('button[type="button"]').addEventListener('click', addToCart));
+    cardBody.forEach(body => body.querySelector('button[type="button"]').addEventListener('click', addToCart, creatOrderItem));
 
     function addToCart(event) {
       const cardButton = event.target.parentElement;
@@ -109,11 +109,45 @@ fetch('https://dummyjson.com/products')
   };
 
   function creatOrderItem() {
+    const imageProductsEl = document.createElement('div');
+    imageProductsEl.classList.add();
+    const imageProducts = imageProductsEl.createElement('img');
+    imageProducts.setAttribute('src', '');
+    imageProducts.classList.add();
+
+
+    const titleEl = document.createElement('div');
+    titleEl.classList.add();
+    titleEl.textContent = title;
+
+
+    const quantityAndPrice = document.createElement('div');
+    quantityAndPrice.classList.add();
+
+    const buttonMinus = quantityAndPrice.createElement('button');
+    buttonMinus.classList.add();
+    buttonMinus.textContent = '-';
+
+    const quantityPrice = quantityAndPrice.createElement('div');
+    quantityAndPrice.classList.add();
+    quantityAndPrice.textContent = `${quantity} x ${price}`;
+
+    const buttonPlus = quantityAndPrice.createElement('button');
+    buttonPlus.classList.add();
+    buttonPlus.textContent = '+';
+
+
+    const RemoveFromOrder = document.createElement('div');
+    RemoveFromOrder.classList.add();
+    const buttonRemoveFromOrder = RemoveFromOrder.createElement('button');
+    buttonRemoveFromOrder.classList.add();
+    buttonRemoveFromOrder.textContent = 'Remove from order';
 
 
 
     const listItem = document.createElement('li');
     listItem.classList.add();
+    listItem.append(imageProductsEl, titleEl, quantityAndPrice);
 
     return listItem;
   }
