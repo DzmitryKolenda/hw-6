@@ -14,8 +14,6 @@ fetch('https://dummyjson.com/products')
     const yourCart = formSearch.querySelector('button[type="button"]');
 
     const cardBody = document.querySelectorAll('.card-body');
-
-    const orderList = document.querySelector('#orderList');
     
     let cartPrice = 0;
 
@@ -83,7 +81,7 @@ fetch('https://dummyjson.com/products')
       };
     };
 
-    cardBody.forEach(body => body.querySelector('button[type="button"]').addEventListener('click', addToCart, creatOrderItem));
+    cardBody.forEach(body => body.querySelector('button[type="button"]').addEventListener('click', addToCart));
 
     function addToCart(event) {
       const cardButton = event.target.parentElement;
@@ -96,7 +94,6 @@ fetch('https://dummyjson.com/products')
 
       for (let i in el) {
         if (!isNaN(el[i])) {
-          console.log(el[i]);
           numEl += el[i];
         };
       };
@@ -106,50 +103,127 @@ fetch('https://dummyjson.com/products')
       yourCart.textContent = `Your cart - ${cartPrice + numEl}.00$`;
 
       cartPrice += numEl;
-  };
+    };
 
-  function creatOrderItem() {
-    const imageProductsEl = document.createElement('div');
-    imageProductsEl.classList.add();
-    const imageProducts = imageProductsEl.createElement('img');
-    imageProducts.setAttribute('src', '');
-    imageProducts.classList.add();
+    const orderList = document.querySelector('#orderList');
+
+    cardBody.forEach(body => body.querySelector('button[type="button"]').addEventListener('click', addOrderItem));
+
+    function addOrderItem(event) {
+      const card = event.target.parentElement.parentElement;
+      const imageProducts = card.querySelector('img');
+      const imageProductsAttribute = imageProducts.getAttribute('src');
+
+      const cardTitle = card.querySelector('.card-title');
+      const title = cardTitle.textContent;
+
+      const cardPrice = card.querySelector('.price');
+      const cardPriceTextContent = cardPrice.textContent;
+
+      const price = number(cardPriceTextContent);
+
+      function number(cardPriceTextContent) {
+        let numEl = '';
+
+        for (let i in cardPriceTextContent) {
+          if (!isNaN(cardPriceTextContent[i])) {
+            numEl += cardPriceTextContent[i];
+          };
+        };
+      
+        numEl = parseInt(numEl);
+
+        return numEl;
+      };
+
+      quantity = count();
+
+      function count() {
+        let clisk = 0;
+        return clisk += 1;       
+      };
+
+      const orderItem = creatOrderItem(imageProductsAttribute, title, price, quantity);
+      orderList.append(orderItem);
+    };
+
+    function creatOrderItem(imageProductsAttribute, title, price, quantity) {
+
+      console.log(quantity);
+
+      const imageProductsEl = document.createElement('div');
+      imageProductsEl.classList.add('imageProductsEl');
+      const imageProducts = document.createElement('img');
+      imageProducts.setAttribute('src', imageProductsAttribute);
+      imageProducts.classList.add('imageProducts');
+      imageProductsEl.append(imageProducts);
 
 
-    const titleEl = document.createElement('div');
-    titleEl.classList.add();
-    titleEl.textContent = title;
+      const titleEl = document.createElement('div');
+      titleEl.classList.add('titleEl');
+      titleEl.textContent = title;
 
 
-    const quantityAndPrice = document.createElement('div');
-    quantityAndPrice.classList.add();
+      const quantityAndPrice = document.createElement('div');
+      quantityAndPrice.classList.add('quantityAndPrice');
 
-    const buttonMinus = quantityAndPrice.createElement('button');
-    buttonMinus.classList.add();
-    buttonMinus.textContent = '-';
-
-    const quantityPrice = quantityAndPrice.createElement('div');
-    quantityAndPrice.classList.add();
-    quantityAndPrice.textContent = `${quantity} x ${price}`;
-
-    const buttonPlus = quantityAndPrice.createElement('button');
-    buttonPlus.classList.add();
-    buttonPlus.textContent = '+';
+      const buttonMinus = document.createElement('button');
+      buttonMinus.classList.add('buttonMinus','textWhite');
+      buttonMinus.textContent = '-';
+      if (quantity === 1) {
+        buttonMinus.setAttribute('disabled', '');
+        buttonMinus.classList.add('buttonDisabled');
+      };
+      buttonMinus.addEventListener('click', minusQuantity);
 
 
-    const RemoveFromOrder = document.createElement('div');
-    RemoveFromOrder.classList.add();
-    const buttonRemoveFromOrder = RemoveFromOrder.createElement('button');
-    buttonRemoveFromOrder.classList.add();
-    buttonRemoveFromOrder.textContent = 'Remove from order';
+      const quantityPrice = document.createElement('div');
+      quantityPrice.classList.add('quantityPrice');
+      quantityPrice.textContent = `${quantity} x ${price}`;
+
+      const buttonPlus = document.createElement('button');
+      buttonPlus.classList.add('buttonPlus', 'textWhite');
+      buttonPlus.textContent = '+';
+      buttonPlus.addEventListener('click', plusQuantity);
+
+      quantityAndPrice.append(buttonMinus, quantityPrice, buttonPlus);
+
+
+      const removeFromOrder = document.createElement('div');
+      removeFromOrder.classList.add('RemoveFromOrder');
+      const buttonRemoveFromOrder = document.createElement('button');
+      buttonRemoveFromOrder.classList.add('buttonRemoveFromOrder');
+      buttonRemoveFromOrder.textContent = 'Remove from order';
+      removeFromOrder.append(buttonRemoveFromOrder);
+      buttonRemoveFromOrder.addEventListener('click', removeOrderItem);
 
 
 
-    const listItem = document.createElement('li');
-    listItem.classList.add();
-    listItem.append(imageProductsEl, titleEl, quantityAndPrice);
+      const listItem = document.createElement('li');
+      listItem.classList.add('listItem');
+      listItem.append(imageProductsEl, titleEl, quantityAndPrice, removeFromOrder);
 
-    return listItem;
-  }
+      return listItem;
+    };
+
+    function minusQuantity(event) {
+      if (quantity > 1) {
+        quantity = quantity - 1;
+      };
+      console.log(quantity);
+      return quantity;
+    };
+
+    function plusQuantity(event) {
+      quantity = quantity + 1;
+      console.log(quantity);
+      return quantity;
+    };
+
+    function removeOrderItem (event) {
+      const listItem = event.target.parentElement.parentElement;
+
+      listItem.remove();
+    };
 
 });
